@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Card Game - Choose Players</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #2d1b69 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Animated background elements */
+        .bg-cards {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.1;
+            z-index: 1;
+        }
+
+        .floating-card {
+            position: absolute;
+            width: 60px;
+            height: 84px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7);
+            border-radius: 8px;
+            animation: float 6s ease-in-out infinite;
+            transform-style: preserve-3d;
+        }
+
+        .floating-card:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .floating-card:nth-child(2) { top: 20%; right: 15%; animation-delay: 1s; }
+        .floating-card:nth-child(3) { bottom: 20%; left: 20%; animation-delay: 2s; }
+        .floating-card:nth-child(4) { bottom: 15%; right: 10%; animation-delay: 3s; }
+        .floating-card:nth-child(5) { top: 50%; left: 5%; animation-delay: 4s; }
+        .floating-card:nth-child(6) { top: 30%; right: 5%; animation-delay: 5s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotateY(0deg); }
+            25% { transform: translateY(-20px) rotateY(90deg); }
+            50% { transform: translateY(0px) rotateY(180deg); }
+            75% { transform: translateY(-15px) rotateY(270deg); }
+        }
+
+        /* Main container */
+        .game-container {
+            position: relative;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 60px 50px;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 90%;
+            animation: slideIn 0.8s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { 
+                opacity: 0;
+                transform: translateY(50px) scale(0.9);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Header */
+        .game-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            animation: gradientShift 3s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .game-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+
+        /* Player selection section */
+        .player-selection {
+            margin-bottom: 30px;
+        }
+
+        .selection-label {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 25px;
+            display: block;
+        }
+
+        .player-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .player-btn {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 20px 25px;
+            color: white;
+            font-family: 'Orbitron', monospace;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            min-width: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .player-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .player-btn:hover::before {
+            left: 100%;
+        }
+
+        .player-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.08));
+        }
+
+        .player-btn:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .player-count {
+            font-size: 2rem;
+            font-weight: 900;
+        }
+
+        .player-text {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Card icons for buttons */
+        .card-icon {
+            display: inline-block;
+            width: 20px;
+            height: 28px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 3px;
+            margin-right: 8px;
+            position: relative;
+        }
+
+        .card-icon::after {
+            content: '♠';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 12px;
+        }
+
+        /* Loading state */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .loading .player-btn {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .game-container {
+                padding: 40px 30px;
+                margin: 20px;
+            }
+            
+            .game-title {
+                font-size: 2rem;
+            }
+            
+            .player-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .player-btn {
+                width: 200px;
+            }
+        }
+
+        /* Glow effect */
+        .glow {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 107, 107, 0.1) 0%, transparent 70%);
+            animation: rotate 10s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating background cards -->
+    <div class="bg-cards">
+        <div class="floating-card"></div>
+        <div class="floating-card"></div>
+        <div class="floating-card"></div>
+        <div class="floating-card"></div>
+        <div class="floating-card"></div>
+        <div class="floating-card"></div>
+    </div>
+
+    <!-- Main game interface -->
+    <div class="game-container">
+        <div class="glow"></div>
+        
+        <h1 class="game-title">CARD MASTER</h1>
+        <p class="game-subtitle">Choose the number of players to start your epic card battle</p>
+        
+        <div class="player-selection">
+            <label class="selection-label">Select Players</label>
+            <div class="player-buttons" id="playerButtons">
+                <button class="player-btn" onclick="createRoom(2)" data-players="2">
+                    <div class="player-count">2</div>
+                    <div class="player-text">Players</div>
+                </button>
+                
+                <button class="player-btn" onclick="createRoom(3)" data-players="3">
+                    <div class="player-count">3</div>
+                    <div class="player-text">Players</div>
+                </button>
+                
+                <button class="player-btn" onclick="createRoom(4)" data-players="4">
+                    <div class="player-count">4</div>
+                    <div class="player-text">Players</div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Store player in room with in-memory storage instead of localStorage
+        let gameData = {};
+
+        function storePlayerInRoom(roomId, playerId) {
+            gameData[roomId] = playerId;
+        }
+
+        // Add loading state management
+        function setLoadingState(isLoading) {
+            const container = document.querySelector('.game-container');
+            const buttons = document.querySelectorAll('.player-btn');
+            
+            if (isLoading) {
+                container.classList.add('loading');
+                buttons.forEach(btn => btn.disabled = true);
+            } else {
+                container.classList.remove('loading');
+                buttons.forEach(btn => btn.disabled = false);
+            }
+        }
+
+        // Enhanced createRoom function with better error handling and UI feedback
+        function createRoom(nb) {
+            console.log(`Creating room for ${nb} players...`);
+            setLoadingState(true);
+
+            fetch("/createRoom/" + nb, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.id && data.player_token) {
+                    // Store the room ID and player token
+                    storePlayerInRoom(data.id, data.player_token);
+
+                    console.log('Room ID and Player Token stored successfully with the new created room.');
+
+                    // Construct the URL using the stored data
+                    var url = `/game/${data.id}/${data.player_token}`;
+
+                    // Add a slight delay for better UX
+                    setTimeout(() => {
+                        window.location.href = url;
+                    }, 500);
+                } else {
+                    throw new Error('Response does not contain the expected fields.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                setLoadingState(false);
+                
+                // Show user-friendly error message
+                const container = document.querySelector('.game-container');
+                const existingError = container.querySelector('.error-message');
+                if (existingError) {
+                    existingError.remove();
+                }
+                
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-message';
+                errorDiv.style.cssText = `
+                    color: #ff6b6b;
+                    background: rgba(255, 107, 107, 0.1);
+                    border: 1px solid rgba(255, 107, 107, 0.3);
+                    border-radius: 8px;
+                    padding: 12px;
+                    margin-top: 20px;
+                    font-size: 0.9rem;
+                `;
+                errorDiv.textContent = 'Failed to create room. Please try again.';
+                container.appendChild(errorDiv);
+                
+                // Remove error message after 3 seconds
+                setTimeout(() => {
+                    if (errorDiv.parentNode) {
+                        errorDiv.remove();
+                    }
+                }, 3000);
+            });
+        }
+
+        // Add button hover sound effect (optional)
+        document.querySelectorAll('.player-btn').forEach(btn => {
+            btn.addEventListener('mouseenter', () => {
+                // You can add sound effects here if desired
+                btn.style.transform = 'translateY(-5px) scale(1.05)';
+            });
+            
+            btn.addEventListener('mouseleave', () => {
+                if (!btn.disabled) {
+                    btn.style.transform = '';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

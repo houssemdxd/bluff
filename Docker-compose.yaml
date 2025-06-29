@@ -1,0 +1,67 @@
+version: "3.8"
+
+services:
+  database:
+    container_name: symfonydatabase
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: symfony_docker
+      MYSQL_USER: symfony
+      MYSQL_PASSWORD: symfony
+    ports:
+      - '4306:3306'
+    volumes:
+      - mysql:/var/lib/mysql
+
+  php:
+    container_name: php
+    build:
+      context: ./php
+    ports:
+      - '9000:9000'
+      - '1700:1700'  # WebSocket port
+    environment:
+      MERCURE_URL: http://127.0.0.1/.well-known/mercure  # Ensure this uses the public IP
+      MERCURE_PUBLIC_URL: http://127.0.0.1/.well-known/mercure  # Same URL as above
+      MERCURE_JWT_SECRET: '!ChangeThisMercureHubJWTSecretKey!'
+    volumes:
+      - ./app:/var/www/symfony_docker
+    depends_on:
+      - database
+
+  nginx:
+    container_name: nginx
+    image: nginx:stable-alpine
+    ports:
+      - '8080:80'
+    volumes:
+      - ./app:/var/www/symfony_docker
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+      - database
+      - mercure
+
+  mercure:
+    container_name: mercure
+    image: dunglas/mercure
+    restart: unless-stopped
+    environment:
+      SERVER_NAME: ':80'
+      MERCURE_PUBLISHER_JWT_KEY: '!ChangeThisMercureHubJWTSecretKey!'  # The key for publishing
+      MERCURE_SUBSCRIBER_JWT_KEY: '!ChangeThisMercureHubJWTSecretKey!'  # The key for subscribing
+      CORS_ALLOWED_ORIGINS: http://127.0.0.1:8080  # Public IP of the frontend
+      ALLOW_ANONYMOUS: 1  # Allow anonymous for testing; disable for production
+    ports:
+      - "81:80"
+    volumes:
+      - mercure_data:/data
+      - ./mercure/Caddyfile:/etc/caddy/Caddyfile  # Mount the Caddyfile for configuration
+    command: /usr/bin/caddy run --config /etc/caddy/Caddyfile
+
+
+volumes:
+  mercure_data: {}
+  mysql: {}

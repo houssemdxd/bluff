@@ -1,0 +1,66 @@
+2025-06-29 12:43:40,853 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-06-29 12:43:40,863 INFO supervisord started with pid 1
+2025-06-29 12:43:41,875 INFO spawned: 'php-fpm' with pid 7
+2025-06-29 12:43:41,882 INFO spawned: 'websocket' with pid 8
+2025-06-29 12:43:43,563 INFO success: php-fpm entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-06-29 12:43:43,564 INFO success: websocket entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-06-29 12:47:40,188 WARN received SIGQUIT indicating exit request
+2025-06-29 12:47:40,207 INFO waiting for php-fpm, websocket to die
+2025-06-29 12:47:40,219 WARN stopped: websocket (terminated by SIGTERM)
+2025-06-29 12:47:40,315 INFO stopped: php-fpm (exit status 0)
+2025-06-29 12:52:19,595 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-06-29 12:52:19,601 INFO supervisord started with pid 1
+2025-06-29 12:52:20,613 INFO spawned: 'php-fpm' with pid 7
+2025-06-29 12:52:20,627 INFO spawned: 'websocket' with pid 8
+2025-06-29 12:52:21,961 INFO success: php-fpm entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-06-29 12:52:21,961 INFO success: websocket entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-06-29 12:53:07,432 WARN received SIGQUIT indicating exit request
+2025-06-29 12:53:07,434 INFO waiting for php-fpm, websocket to die
+2025-06-29 12:53:07,446 WARN stopped: websocket (terminated by SIGTERM)
+2025-06-29 12:53:07,469 INFO stopped: php-fpm (exit status 0)
+2025-06-29 12:54:02,371 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-06-29 12:54:02,379 INFO supervisord started with pid 1
+2025-06-29 12:54:03,381 INFO spawned: 'php-fpm' with pid 7
+2025-06-29 12:54:03,385 INFO spawned: 'websocket' with pid 8
+2025-06-29 12:54:04,388 INFO success: php-fpm entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-06-29 12:54:04,395 INFO success: websocket entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-06-29 12:58:19,395 WARN received SIGQUIT indicating exit request
+2025-06-29 12:58:19,441 INFO waiting for php-fpm, websocket to die
+2025-06-29 12:58:19,470 WARN stopped: websocket (terminated by SIGTERM)
+2025-06-29 12:58:19,769 INFO stopped: php-fpm (exit status 0)
+2025-06-29 12:58:46,611 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-06-29 12:58:46,620 INFO supervisord started with pid 1
+2025-06-29 12:58:47,626 INFO spawned: 'php-fpm' with pid 7
+2025-06-29 12:58:47,633 INFO spawned: 'websocket' with pid 8
+2025-06-29 12:58:48,993 INFO success: php-fpm entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-06-29 12:58:48,993 INFO success: websocket entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-06-29 13:09:31,855 WARN received SIGQUIT indicating exit request
+2025-06-29 13:09:31,885 INFO waiting for php-fpm, websocket to die
+2025-06-29 13:09:32,903 WARN stopped: websocket (terminated by SIGTERM)
+2025-06-29 13:09:33,166 INFO stopped: php-fpm (exit status 0)
+2025-06-29 13:09:47,508 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-06-29 13:09:47,748 INFO supervisord started with pid 1
+2025-06-29 13:09:48,857 INFO spawned: 'php-fpm' with pid 8
+2025-06-29 13:09:48,979 INFO spawned: 'websocket' with pid 9
+2025-06-29 13:09:50,050 INFO success: php-fpm entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-06-29 13:09:50,054 INFO success: websocket entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-06-29 13:12:10,137 WARN received SIGQUIT indicating exit request
+2025-06-29 13:12:10,173 INFO waiting for php-fpm, websocket to die
+2025-06-29 13:12:11,203 WARN stopped: websocket (terminated by SIGTERM)
+2025-06-29 13:12:11,356 INFO stopped: php-fpm (exit status 0)
+2025-06-29 13:13:37,746 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-06-29 13:13:37,787 INFO supervisord started with pid 1
+2025-06-29 13:13:38,882 INFO spawned: 'php-fpm' with pid 8
+2025-06-29 13:13:38,915 INFO spawned: 'websocket' with pid 9
+2025-06-29 13:13:40,560 INFO success: php-fpm entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-06-29 13:13:40,560 INFO success: websocket entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-06-29 13:21:08,595 WARN received SIGQUIT indicating exit request
+2025-06-29 13:21:08,624 INFO waiting for php-fpm, websocket to die
+2025-06-29 13:21:09,650 WARN stopped: websocket (terminated by SIGTERM)
+2025-06-29 13:21:09,804 INFO stopped: php-fpm (exit status 0)
+2025-06-29 13:40:12,763 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2025-06-29 13:40:12,775 INFO supervisord started with pid 1
+2025-06-29 13:40:13,808 INFO spawned: 'php-fpm' with pid 11
+2025-06-29 13:40:13,873 INFO spawned: 'websocket' with pid 12
+2025-06-29 13:40:15,626 INFO success: php-fpm entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2025-06-29 13:40:15,626 INFO success: websocket entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)

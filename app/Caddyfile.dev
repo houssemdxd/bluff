@@ -1,0 +1,25 @@
+:3000
+
+log
+
+route {
+    redir / /.well-known/mercure/ui/
+
+    mercure {
+        publisher_jwt !ChangeThisMercureHubJWTSecretKey!
+        subscriber_jwt !ChangeThisMercureHubJWTSecretKey!
+
+        # CORS for browser requests
+        cors_origins http://127.0.0.1:8000
+
+        # Authorization for publishing/subscribing
+        publish_allowed_origin http://127.0.0.1:8000
+        subscribe_allowed_origin http://127.0.0.1:8000
+
+        demo
+        anonymous
+        subscriptions
+    }
+
+    respond "Not Found" 404
+}

@@ -1,0 +1,14 @@
+# config/routes.yaml
+
+# This section defines the default route for the homepage
+home:
+    path: /
+    controller: App\Controller\RoomController::index# config/routes.yaml
+app_room_spesification:
+    path: /roomspesification
+    controller: App\Controller\RoomController::spesification
+
+# This section loads routes from the controllers using attributes (annotations)
+controllers:
+    resource: ../src/Controller/
+    type: attribute

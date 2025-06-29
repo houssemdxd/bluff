@@ -1,0 +1,10 @@
+:80 {
+    route {
+        mercure {
+            jwt_key '!ChangeThisMercureHubJWTSecretKey!'
+            cors_origins http://127.0.0.1:8080  # Match the frontend URL
+        }
+
+        respond /health "OK" 200
+    }
+}
