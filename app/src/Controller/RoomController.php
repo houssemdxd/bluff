@@ -1198,7 +1198,7 @@ public function put(
         $connector = new Connector($loop);
     
         // Define the WebSocket URL, which could be host.docker.internal or EC2 public IP depending on your setup
-        $wsUrl = 'ws://13.49.241.40:1700';  // Adjust to your server address
+        $wsUrl = 'ws://16.171.33.175:1700';  // Adjust to your server address
         
         // Log the URL being used
         error_log("Connecting to WebSocket server at: " . $wsUrl);
