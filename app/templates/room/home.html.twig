@@ -441,6 +441,9 @@
                     storePlayerInRoom(data.roomId, data.playerId);
                     console.log('Player ID:', data.playerId);
                     console.log('Room ID:', data.roomId);
+                    var url = `/realgame/${data.roomId}/${data.playerId}`;
+                    window.location.href = url; 
+
                 } else {
                     console.error('Failed to join the room.');
                     alert('Failed to join the room. Please try again.');

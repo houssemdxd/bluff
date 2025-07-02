@@ -702,9 +702,9 @@
 
         .selected-number {
             font-size: 18px;
-            color: #000;
+            color: red;
             font-weight: 800;
-            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3);
+            text-shadow: 1px 1px 2px rgba(255, 23, 58, 0.3);
             animation: numberCyberFloat 2s infinite ease-in-out;
             font-family: 'Orbitron', monospace;
         }
@@ -1465,76 +1465,6 @@ cardList.forEach(item => {
     }
     //--------------------------------------------------
 
-// WebSocket Connection Setup
-var wsFirst = new WebSocket('ws://16.171.33.175:1700');
-
-// WebSocket Connection Open
-wsFirst.onopen = function() {
-    console.log('Connected to WebSocket');
-};
-
-// Function to Remove Spaces from a String
-function removeSpaces(str) {
-    return str.trim();
-}
-
-// WebSocket Message Handler
-wsFirst.onmessage = async function(event) {
-    try {
-        console.log("Update received from WebSocket");
-
-        // Parse the message
-        const data = JSON.parse(event.data);
-        const { topic, data: messageData } = data;
-        let topic1 = removeSpaces(topic);
-        console.log("Topic received from server:" + topic1);
-
-        // Handle Different Topics
-        switch (topic1) {
-            case `/{{rommid}}/putdone`:
-                handlePutDone(messageData);
-                break;
-
-            case `/{{rommid}}/ready`:
-                console.log('Room is ready:', messageData);
-                break;
-
-            case '/win-loser-players-broadcast':
-                document.getElementById("containerscard").innerHTML = ""
-                handleWinLoserBroadcast(messageData);
-                break;
-
-            case '/broadcastangel': // Handle 'angel' event
-            document.getElementById("containerscard").innerHTML = ""
-                console.log("migartion from mercure to websocket upadete topis : broadcastangel data :" + messageData)
-                handleAngelEvent(messageData);
-                break;
-
-                case "/{{playerIdt}}/loserplayer": // Handle 'loserplayer' event
-                document.getElementById("containerscard").innerHTML = ""
-                  console.log("migartion update playerid/loser player from mercure to socket ")
-                selectedCards = [];
-                 updateBottle();
-
-                handleLoserPlayerEvent(messageData);
-                console.log("migartion update playerid/loser player from mercure to socket ")
-                break;
-
-                 case `/{{rommid}}/table`: // Handle 'table' event
-                handleTableEvent(messageData);
-                break;
-                case `/{{rommid}}/goalUpdate`: // Handle 'goalUpdate' event
-                handleGoalUpdateEvent(messageData);
-                break;
-
-            default:
-                console.log('Unknown topic: ', topic1);
-        }
-    } catch (error) {
-        console.error('Error parsing WebSocket message:', error);
-    }
-};
-
 
 // Function to Handle 'goalUpdate' Event
 function handleGoalUpdateEvent(messageData) {
@@ -1764,86 +1694,126 @@ function updatePlayerAnimation(currentPlayer, activePlayer) {
 }
 
 var currentPlayer;
-{% if state == 1 and ready %}
-var dataTest;
+{% block javascripts %}
+
+
+document.addEventListener("DOMContentLoaded", function () {
 
 //update from thr websocket 
-
+// WebSocket Connection Setup
 var wsFirst = new WebSocket('ws://16.171.33.175:1700');
-wsFirst.onopen = function() {
+
+// WebSocket Connection Open
+wsFirst.onopen = function () {
     console.log('Connected to WebSocket');
 };
-var dataG;
-wsFirst.onmessage = function(event) {
-    try{
-            console.log("update send from web socket yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
-    
-    data=JSON.parse(event.data);
-    topic=data.topic
-    dataG=JSON.parse(event.data);
 
+// Function to Remove Spaces from a String
+function removeSpaces(str) {
+    return str.trim();
+}
 
-    
-        console.log("Topic received from server:" + topic);
+// WebSocket Message Handler (MERGED)
+wsFirst.onmessage = function (event) {
+    try {
+        console.log("Update received from WebSocket");
 
-    switch (topic) {
-    
-            case "/{{rommid }}/putdone":
-                console.log('put done update from websocket:', data.data);
-                handlePutDone(data.data)
+        const parsed = JSON.parse(event.data);
+        const topicRaw = parsed.topic || '';
+        const topic = removeSpaces(topicRaw);
+        const messageData = parsed.data;
+        console.log("Topic received from server:", topic);
 
- try {
+        switch (topic) {
+            case `/{{ rommid }}/win`:
+                console.log("Win message received");
+                handleWinMessage(messageData);
+                break;
 
-        var data = JSON.parse(event.data);
-        data=data.data;
-         currentPlayer = data.currentroundplayer;
-        const activePlayer = data.nextplayer;
-        console.log("the other player Id is "+activePlayer);
-            actif=activePlayer;
-        var cardnumberP=data.cardnumber;
+            case `/{{ rommid }}/putdone`:
+                console.log('put done update from websocket:', messageData);
+                handlePutDone(messageData);
 
-    //this is the bug found 
-        if (currentPlayer !== {{ player.id }} && winstate != 1 && activePlayer=={{ player.id }}) {
-        var turn = document.getElementById("content");
-        turn.style.border="30px solid #75b798";   
+                try {
+                    const data = messageData;
+                    const currentPlayerId = data.currentroundplayer;
+                    const activePlayer = data.nextplayer;
+                    const cardnumberP = data.cardnumber;
 
-            createButton('table', 'button-lier', 'button-lier', `fetchLieData({{ player.id }})`, '');
-                if (activePlayer === {{ player.id }} ) {
-                    console.log("Your turn to play, mister " + activePlayer);
-                    createButton('table', 'button-put', 'put', 'put()', 'Put cards');
+                    currentPlayer = currentPlayerId;
+                    actif = activePlayer;
+
+                    console.log("the other player Id is", activePlayer);
+
+                    if (currentPlayer !== {{ player.id }} && winstate !== 1 && activePlayer === {{ player.id }}) {
+                        var turn = document.getElementById("content");
+                        if (turn) turn.style.border = "30px solid #75b798";
+
+                        createButton('table', 'button-lier', 'button-lier', `fetchLieData({{ player.id }})`, '');
+
+                        if (activePlayer === {{ player.id }}) {
+                            console.log("Your turn to play, mister", activePlayer);
+                            createButton('table', 'button-put', 'put', 'put()', 'Put cards');
+                        }
+                    }
+                } catch (error) {
+                    console.error("Failed to process 'putdone' extra logic:", error);
                 }
-          
+
+                break;
+
+            case `/{{ rommid }}/ready`:
+                console.log('Room is ready:', messageData);
+                break;
+
+            case '/win-loser-players-broadcast':
+                document.getElementById("containerscard").innerHTML = "";
+                console.log("Handling win-loser broadcast");
+                handleWinLoserBroadcast(messageData);
+                break;
+
+            case '/broadcastangel':
+                document.getElementById("containerscard").innerHTML = "";
+                console.log("Handling broadcastangel:", messageData);
+                handleAngelEvent(messageData);
+                break;
+
+            case `/{{ playerIdt }}/loserplayer`:
+                document.getElementById("containerscard").innerHTML = "";
+                console.log("Handling loserplayer");
+                selectedCards = [];
+                updateBottle();
+                handleLoserPlayerEvent(messageData);
+                break;
+
+            case `/{{ rommid }}/table`:
+                handleTableEvent(messageData);
+                break;
+
+            case `/{{ rommid }}/goalUpdate`:
+                handleGoalUpdateEvent(messageData);
+                break;
+
+            default:
+                console.log("Unknown topic:", topic);
         }
     } catch (error) {
-        console.error("Failed to process 'putdone' event:", error);
+        console.error("Error parsing WebSocket message:", error);
     }
-
-          break;
-            case "/{{rommid }}/ready":
-                console.log('Room is ready:', data.data);
-                break;
-                //this event id for making the angry animation in the front nthing else 
-            case '/win-loser-players-broadcast':
-                console.log('Hello message:', data.data);
-                handleWinLoserBroadcast(data.data);
-                break;
-
-                break;
-            default:
-                console.log('Unknown topic:', topic);
-        }
-    } catch (e) {
-        console.error('Error parsing WebSocket message:', e);
-    }
-
-
-
 };
+
 
 wsFirst.onclose = function() {
     console.log('Disconnected from WebSocket');
 };
-    
+       });
+
+       
+ {% endblock %}
+{% if state == 1 and ready %}
+var dataTest;
+
+
 var turn = document.getElementById("content");
  turn.style.border="30px solid #75b798";   
 
@@ -2363,57 +2333,53 @@ function createButton(parentId, className, id, onClickFunction, buttonText) {
 
 var perviousplayer=0;
 
+function highlightWinningPlayers(winningPlayerIds) {
+    winningPlayerIds.forEach(playerId => {
+        // Update win state and visual effect for the current player
+        if ({{ player.id }} == playerId) {
+            winstate = 1;
+            showWinEffect();
+        }
 
-// Event listener for 'win' event
-const eventSourceWin = new EventSource("{{ mercure('/' ~ rommid ~ '/win')|escape('js') }}");
-eventSourceWin.onmessage = event => {
-    console.log("Win update received");
+        console.log('Winning Player ID:', playerId);
+        const playerElement = document.getElementById(playerId);
+        console.log("Player element:", playerElement, "ID:", playerId);
 
+        if (playerElement) {
+            const newParagraph = document.createElement("p");
+            newParagraph.textContent = "🎉🎉";
+            newParagraph.style.position = "absolute";
+            newParagraph.style.top = "-10px";
+            newParagraph.style.left = "10px";
+            playerElement.appendChild(newParagraph);
+        }
+    });
+
+    // Highlight the last winner
+    const lastPlayerWin = winningPlayerIds[winningPlayerIds.length - 1];
+    const winAvatar = document.getElementById(lastPlayerWin);
+
+    if (winAvatar) {
+        console.log("Highlighting last winner:", lastPlayerWin);
+        winAvatar.style.backgroundColor = "yellow";
+    }
+}
+
+function handleWinMessage(data) {
     try {
-        const data = JSON.parse(event.data);
-        const winningPlayerIds = data.winningPlayerIds;
-        console.log(winningPlayerIds);
-currentPlayer=currentPlayer-1;
-console.log(currentPlayer);
-        winningPlayerIds.forEach(playerId => {
-            if ({{ player.id }} == playerId) {
-                winstate = 1;
-                            showWinEffect();
+       
+ const winningPlayerIds = data.winningPlayerIds;
+        console.log("Winning players:", winningPlayerIds);
 
-            }
-            console.log('Winning Player ID:', playerId);
-          const playerElement = document.getElementById(playerId);
-            console.log("this is the player html element "+playerElement+"its id is +"+ playerId)
-            if (playerElement) {
-                const newParagraph = document.createElement("p");
-                newParagraph.textContent = "🎉🎉";
-                newParagraph.style.position = "absolute";
-                newParagraph.style.top = "-10px";
-                newParagraph.style.left = "10px";
-                playerElement.appendChild(newParagraph);
-            }
-        });
+        currentPlayer -= 1;
+        console.log("Updated currentPlayer:", currentPlayer);
 
-//last winner player 
-
-var lastPlayerWin =winningPlayerIds[winningPlayerIds.length -1];
-    //inform all the players of the winnig player 
-    var win_avatar = document.getElementById(lastPlayerWin);
-            console.log("the inshure "+win_avatar);
-
-    if (win_avatar) 
-    {console.log("the sure"+lastPlayerWin)
-        win_avatar.style.backgroundColor ="yellow";
-        console.log("the sure is "+win_avatar);
-
-
-
-    }
-
+        highlightWinningPlayers(winningPlayerIds);
     } catch (error) {
-        console.error("Failed to process 'win' event:", error);
+        console.error("Failed to handle win message:", error);
     }
-};
+}
+
 {% if winningPlayerIds is not empty %}
 
         const winningPlayerIds = {{ winningPlayerIds|json_encode|raw }};

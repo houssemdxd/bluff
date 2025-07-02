@@ -124,12 +124,6 @@ class RoomController extends AbstractController
         }
 
 
-
-
-
-
-
-
         $room = $roomRepository->find($roomId);
 
 
@@ -584,10 +578,17 @@ public function put(
                 
                 // Publish the win update
                 $winningPlayers = array_map(fn($p) => $p->getId(), $playerRepository->findBy(["room" => $room, "winner" => 1]));
-                $hubInterface->publish(new Update(
+              /*  $hubInterface->publish(new Update(
                     '/' . $room->getId() . '/win',
                     json_encode(['winningPlayerIds' => $winningPlayers])
-                ));
+                ));*/
+                //migarte the websovket
+
+$this->publishToWebSocket(
+    topic: "/" . $room->getId() . "/win",
+    data: ['winningPlayerIds' => $winningPlayers]
+);
+
 
                 //check for end of game 
                 $players = $playerRepository->findBy(["room" => $room]);
@@ -905,7 +906,7 @@ public function put(
                     }
                 } // End foreach
 
-                $update = new Update(
+               /* $update = new Update(
                     '/' . $room->getId() . '/win',
                     json_encode([
                         'update' => 'Winning player IDs',
@@ -913,7 +914,13 @@ public function put(
                     ])
                 );
 
-                $hubInterface->publish($update);
+                $hubInterface->publish($update);*/
+
+$this->publishToWebSocket(
+    topic: "/" . $room->getId() . "/win",
+    data: ['winningPlayerIds' => $winningPlayers]
+);
+
                 #try to change state to the closet stillplaying player from the winner 
 
                 $maxplayernumber = count($players) - 1;
